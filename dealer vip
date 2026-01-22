@@ -1,0 +1,109 @@
+stock GetDealerPriceAircraft(modelid) {
+    switch(modelid) {
+        case 511: return 27000;
+        case 512: return 32500;
+        case 593: return 29800;
+        case 520: return 35000;
+        case 553: return 34000;
+        case 476: return 26500;
+        case 519: return 33000;
+        case 460: return 25500;
+        case 513: return 28500;
+        case 487: return 31000;
+        case 488: return 32000;
+        case 563: return 34500;
+        case 447: return 27500;
+        case 469: return 29500;
+    }
+    return 0;
+}
+CMD:buyv(playerid, params[]) {
+    if(pData[playerid][pVip] < 1)
+	    	return SendErrorMessage(playerid, "You're not a VIP Player.");
+
+    if(IsPlayerInRangeOfPoint(playerid, 5.0, 1891.9299,-2328.6719,13.5469))
+    {
+        new str[1024];
+        format(str, sizeof(str), ""WHITE_E"%s\t"LG_E"%s\n\
+        %s\t"LG_E"%s\n\
+        %s\t"LG_E"%s\n\
+        %s\t"LG_E"%s\n\
+        %s\t"LG_E"%s\n\
+        %s\t"LG_E"%s\n\
+        %s\t"LG_E"%s\n\
+        %s\t"LG_E"%s\n\
+        %s\t"LG_E"%s\n\
+        %s\t"LG_E"%s\n\
+        %s\t"LG_E"%s\n\
+        %s\t"LG_E"%s\n\
+        %s\t"LG_E"%s\n\
+        %s\t"LG_E"%s\n",
+        GetVehicleModelName(511), FormatMoney(GetDealerPriceAircraft(511)),
+        GetVehicleModelName(512), FormatMoney(GetDealerPriceAircraft(512)),
+        GetVehicleModelName(593), FormatMoney(GetDealerPriceAircraft(593)),
+        GetVehicleModelName(520), FormatMoney(GetDealerPriceAircraft(520)),
+        GetVehicleModelName(553), FormatMoney(GetDealerPriceAircraft(553)),
+        GetVehicleModelName(476), FormatMoney(GetDealerPriceAircraft(476)),
+        GetVehicleModelName(519), FormatMoney(GetDealerPriceAircraft(519)),
+        GetVehicleModelName(460), FormatMoney(GetDealerPriceAircraft(460)),
+        GetVehicleModelName(513), FormatMoney(GetDealerPriceAircraft(513)),
+        GetVehicleModelName(487), FormatMoney(GetDealerPriceAircraft(487)),
+        GetVehicleModelName(488), FormatMoney(GetDealerPriceAircraft(488)),
+        GetVehicleModelName(563), FormatMoney(GetDealerPriceAircraft(563)),
+        GetVehicleModelName(447), FormatMoney(GetDealerPriceAircraft(447)),
+        GetVehicleModelName(469), FormatMoney(GetDealerPriceAircraft(469))
+        );
+        ShowPlayerDialog(playerid, DIALOG_BUY_PESAWAT, DIALOG_STYLE_LIST, "Aircraft Dealership", str, "Buy", "Close");
+    }
+    return 1;
+}
+
+function OnVehDealerPes(playerid, pid, model, color1, color2, cost, Float:x, Float:y, Float:z, Float:a)
+{
+	new i = Iter_Free(PVehicles);
+	pvData[i][cID] = cache_insert_id();
+	pvData[i][cOwner] = pid;
+	pvData[i][cModel] = model;
+	pvData[i][cColor1] = color1;
+	pvData[i][cColor2] = color2;
+	pvData[i][cPaintJob] = -1;
+	pvData[i][cNeon] = 0;
+	pvData[i][cTogNeon] = 0;
+	pvData[i][cLocked] = 0;
+	pvData[i][cInsu] = 3;
+	pvData[i][cClaim] = 0;
+	pvData[i][cClaimTime] = 0;
+	pvData[i][cTicket] = 0;
+	pvData[i][cPrice] = cost;
+	pvData[i][cHealth] = 1000;
+	pvData[i][cFuel] = 1000;
+	format(pvData[i][cPlate], 16, "NoHave");
+	pvData[i][cPlateTime] = 0;
+	pvData[i][cPosX] = x;
+	pvData[i][cPosY] = y;
+	pvData[i][cPosZ] = z;
+	pvData[i][cPosA] = a;
+	pvData[i][cInt] = 0;
+	pvData[i][cVw] = 0;
+	pvData[i][cLumber] = -1;
+	pvData[i][cMetal] = 0;
+	pvData[i][cCoal] = 0;
+	pvData[i][cProduct] = 0;
+	pvData[i][cGasOil] = 0;
+	for(new j = 0; j < 17; j++)
+		pvData[i][cMod][j] = 0;
+	Iter_Add(PVehicles, i);
+	OnVehicleDealerRespawn(i);
+	Servers(playerid, "Anda telah membeli kendaraan %s dengan harga %s", GetVehicleModelName(model), FormatMoney(GetDealerPriceAircraft(model)));
+	pData[playerid][pBuyPvModel] = 0;
+	SetPlayerVirtualWorld(playerid, 0);
+	return 1;
+}
+
+// IsAHelicopter(vehicleid)
+// {
+//     switch (GetVehicleModel(vehicleid)) {
+//         case 417, 425, 447, 465, 469, 487, 488, 497, 501, 548, 563: return 1;
+//     }
+//     return 0;
+// }
